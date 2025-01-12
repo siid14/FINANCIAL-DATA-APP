@@ -1,4 +1,4 @@
-# Financial Data Filtering App
+# Financial Data Filtering App (by Sidney Thomas)
 
 A React-based web application that fetches and displays Apple Inc.'s financial data, allowing users to filter and analyze key financial metrics.
 
