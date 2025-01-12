@@ -71,91 +71,94 @@ export const FinancialTable: React.FC<FinancialTableProps> = ({
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <SortHeader
-                label="Date"
-                column="date"
-                currentSort={sort}
-                onSort={handleSort}
-              />
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <SortHeader
-                label="Revenue"
-                column="revenue"
-                currentSort={sort}
-                onSort={handleSort}
-              />
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <SortHeader
-                label="Net Income"
-                column="netIncome"
-                currentSort={sort}
-                onSort={handleSort}
-              />
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <SortHeader
-                label="Gross Profit"
-                column="grossProfit"
-                currentSort={sort}
-                onSort={handleSort}
-              />
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <SortHeader
-                label="EPS"
-                column="eps"
-                currentSort={sort}
-                onSort={handleSort}
-              />
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <SortHeader
-                label="Operating Income"
-                column="operatingIncome"
-                currentSort={sort}
-                onSort={handleSort}
-              />
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {sortedData.map(
-            (
-              item,
-              index // Note: Changed from data to sortedData
-            ) => (
-              <tr
-                key={index}
-                className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-              >
-                <td className="px-6 py-4 whitespace-nowrap">{item.date}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  ${(item.revenue / 1000000).toFixed(2)}M
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  ${(item.netIncome / 1000000).toFixed(2)}M
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  ${(item.grossProfit / 1000000).toFixed(2)}M
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  ${item.eps.toFixed(2)}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  ${(item.operatingIncome / 1000000).toFixed(2)}M
-                </td>
+    <div className="relative rounded-lg border border-gray-200 shadow-sm">
+      <div className="overflow-x-auto">
+        <div className="inline-block min-w-full align-middle">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="sticky top-0 px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  <SortHeader
+                    label="Date"
+                    column="date"
+                    currentSort={sort}
+                    onSort={handleSort}
+                  />
+                </th>
+                <th className="sticky top-0 px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  <SortHeader
+                    label="Revenue"
+                    column="revenue"
+                    currentSort={sort}
+                    onSort={handleSort}
+                  />
+                </th>
+                <th className="sticky top-0 px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  <SortHeader
+                    label="Net Income"
+                    column="netIncome"
+                    currentSort={sort}
+                    onSort={handleSort}
+                  />
+                </th>
+                <th className="sticky top-0 px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                  <SortHeader
+                    label="Gross Profit"
+                    column="grossProfit"
+                    currentSort={sort}
+                    onSort={handleSort}
+                  />
+                </th>
+                <th className="sticky top-0 px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                  <SortHeader
+                    label="EPS"
+                    column="eps"
+                    currentSort={sort}
+                    onSort={handleSort}
+                  />
+                </th>
+                <th className="sticky top-0 px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
+                  <SortHeader
+                    label="Operating Income"
+                    column="operatingIncome"
+                    currentSort={sort}
+                    onSort={handleSort}
+                  />
+                </th>
               </tr>
-            )
-          )}
-        </tbody>
-      </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {sortedData.map((item, index) => (
+                <tr
+                  key={index}
+                  className={`${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  } hover:bg-gray-100 transition-colors`}
+                >
+                  <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                    {item.date}
+                  </td>
+                  <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                    ${(item.revenue / 1000000).toFixed(2)}M
+                  </td>
+                  <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                    ${(item.netIncome / 1000000).toFixed(2)}M
+                  </td>
+                  <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden md:table-cell">
+                    ${(item.grossProfit / 1000000).toFixed(2)}M
+                  </td>
+                  <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden sm:table-cell">
+                    ${item.eps.toFixed(2)}
+                  </td>
+                  <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden lg:table-cell">
+                    ${(item.operatingIncome / 1000000).toFixed(2)}M
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };

@@ -94,12 +94,18 @@ function FinancialApp() {
 
   // Render our table component once data is loaded
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6 text-blue-500">
-        Apple Inc. Financial Data
-      </h1>
-      <FilterControls onFilterChange={handleFilterChange} />
-      <FinancialTable data={filteredData} isLoading={isLoading} error={error} />
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 text-blue-600 text-center sm:text-left">
+          Apple Inc. Financial Data
+        </h1>
+        <FilterControls onFilterChange={handleFilterChange} />
+        <FinancialTable
+          data={filteredData}
+          isLoading={isLoading}
+          error={error}
+        />
+      </div>
     </div>
   );
 }
