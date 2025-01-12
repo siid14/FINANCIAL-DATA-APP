@@ -1,6 +1,5 @@
 import React from "react";
 import { FinancialStatement } from "../../types";
-import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import SortHeader from "./SortHeader"; // Make sure this path matches your file structure
 
 interface FinancialTableProps {

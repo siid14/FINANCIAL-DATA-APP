@@ -1,4 +1,3 @@
-// src/components/features/FinancialApp.tsx
 import React, { useState, useEffect } from "react";
 import { APIService } from "../../services/api";
 import { FinancialStatement } from "../../types";
