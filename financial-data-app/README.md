@@ -98,12 +98,6 @@ financial-data-app/
 
 ## Development
 
-- Run tests:
-
-  ```bash
-  yarn test
-  ```
-
 - Build for production:
   ```bash
   yarn build
