@@ -25,10 +25,10 @@ export const FinancialTable: React.FC<FinancialTableProps> = ({
   // Your existing sortData function remains unchanged
   const sortData = (data: FinancialStatement[]) => {
     if (!sort.column || !sort.direction) return data;
-
     return [...data].sort((a, b) => {
-      const aValue = a[sort.column];
-      const bValue = b[sort.column];
+      // sort.column is guaranteed to be non-null here due to the check above
+      const aValue = a[sort.column!];
+      const bValue = b[sort.column!];
 
       if (sort.column === "date") {
         const aDate = new Date(aValue as string).getTime();
