@@ -2,6 +2,22 @@ import { FinancialStatement } from "../types";
 
 const API_BASE_URL = "https://financialmodelingprep.com/api/v3";
 
+interface RawFinancialData {
+  date: string;
+  symbol: string;
+  reportedCurrency: string;
+  fillingDate: string;
+  acceptedDate: string;
+  period: string;
+  revenue: number;
+  costOfRevenue: number;
+  grossProfit: number;
+  grossProfitRatio: number;
+  operatingIncome: number;
+  netIncome: number;
+  eps: number;
+}
+
 export class APIService {
   private apiKey: string;
 
@@ -9,38 +25,36 @@ export class APIService {
     this.apiKey = apiKey;
   }
 
-  private handleError(error: any): never {
-    // We enhance our error handling to provide more specific messages
-    if (error instanceof Response) {
-      switch (error.status) {
-        case 401:
-          throw new Error("Invalid API key");
-        case 403:
-          throw new Error("Access forbidden - check your API key permissions");
-        case 429:
-          throw new Error("Rate limit exceeded");
-        default:
-          throw new Error(`API error: ${error.status}`);
-      }
-    }
-    throw error;
-  }
-
-  async getFinancialStatements(): Promise<FinancialStatement[]> {
+  // This method fetches and transforms our financial data
+  async getFinancialStatements() {
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/income-statement/AAPL?period=annual&apikey=${this.apiKey}`
-      );
+      // First, we construct our URL with the API key
+      const url = new URL(`${API_BASE_URL}/income-statement/AAPL`);
+      url.searchParams.append("period", "annual");
+      url.searchParams.append("apikey", this.apiKey);
 
+      // Making the API request
+      console.log(
+        "Fetching data from:",
+        url.toString().replace(this.apiKey, "[HIDDEN]")
+      );
+      const response = await fetch(url.toString());
+
+      // Check if the request was successful
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(await this.handleErrorResponse(response));
       }
 
-      const data = await response.json();
+      // Parse the JSON response
+      const rawData: RawFinancialData[] = await response.json();
 
-      // Transform the API response to match our interface
-      return data.map((item: any) => ({
-        date: item.date,
+      // Transform the data to match our application's needs
+      return rawData.map((item) => ({
+        date: new Date(item.date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }),
         revenue: item.revenue,
         netIncome: item.netIncome,
         grossProfit: item.grossProfit,
@@ -48,9 +62,37 @@ export class APIService {
         operatingIncome: item.operatingIncome,
       }));
     } catch (error) {
-      console.error("Error fetching financial data:", error);
-      this.handleError(error);
+      // Log the error for debugging but throw a user-friendly message
+      console.error("API Error:", error);
+      throw new Error(this.getErrorMessage(error));
     }
+  }
+
+  // Helper method to handle different types of error responses
+  private async handleErrorResponse(response: Response): Promise<string> {
+    try {
+      const errorData = await response.json();
+      switch (response.status) {
+        case 401:
+          return "Invalid API key. Please check your credentials.";
+        case 403:
+          return "Access forbidden. Please check your API key permissions.";
+        case 429:
+          return "Too many requests. Please try again later.";
+        default:
+          return errorData.message || `API error: ${response.status}`;
+      }
+    } catch {
+      return `API error: ${response.status}`;
+    }
+  }
+
+  // Helper method to convert errors into user-friendly messages
+  private getErrorMessage(error: unknown): string {
+    if (error instanceof Error) {
+      return error.message;
+    }
+    return "An unexpected error occurred while fetching financial data.";
   }
 }
 
