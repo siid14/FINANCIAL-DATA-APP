@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { APIService } from "../../services/api";
 import { FinancialStatement } from "../../types";
 import FinancialTable from "./FinancialTable";
