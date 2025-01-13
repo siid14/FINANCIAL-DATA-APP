@@ -9,14 +9,14 @@ interface FilterControlsProps {
 }
 
 const FilterControls: React.FC<FilterControlsProps> = ({ onFilterChange }) => {
-  // We use local state to manage filter values before applying them
+  // local state to store filter values before applying them
   const [filters, setFilters] = React.useState({
     dateRange: { start: "", end: "" },
     revenue: { min: "", max: "" },
     netIncome: { min: "", max: "" },
   });
 
-  // Handle individual filter changes
+  // updates individual filter values
   const handleFilterChange = (
     category: "dateRange" | "revenue" | "netIncome",
     field: "start" | "end" | "min" | "max",
@@ -31,7 +31,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ onFilterChange }) => {
     }));
   };
 
-  // Notify parent component when filters change
+  // notify parent component whenever filters change
   React.useEffect(() => {
     onFilterChange(filters);
   }, [filters, onFilterChange]);
@@ -39,7 +39,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ onFilterChange }) => {
   return (
     <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 mb-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        {/* Date Range Filter */}
+        {/* date range filter */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700">
             Date Range
@@ -70,7 +70,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ onFilterChange }) => {
           </div>
         </div>
 
-        {/* Revenue Filter */}
+        {/* revenue filter */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700">
             Revenue Range (in millions)
@@ -101,7 +101,7 @@ const FilterControls: React.FC<FilterControlsProps> = ({ onFilterChange }) => {
           </div>
         </div>
 
-        {/* Net Income Filter */}
+        {/* net income filter */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700">
             Net Income Range (in millions)

@@ -1,17 +1,19 @@
 import React from "react";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { FinancialStatement } from "../../types";
 
-// We define the possible sort directions to maintain type safety
+// type for possible sort directions
 type SortDirection = "asc" | "desc" | null;
 
+// props interface for sort header component
 interface SortHeaderProps {
   label: string;
-  column: string;
+  column: keyof FinancialStatement;
   currentSort: {
-    column: string | null;
+    column: keyof FinancialStatement | null;
     direction: SortDirection;
   };
-  onSort: (column: string) => void;
+  onSort: (column: keyof FinancialStatement) => void;
 }
 
 const SortHeader: React.FC<SortHeaderProps> = ({
@@ -20,7 +22,7 @@ const SortHeader: React.FC<SortHeaderProps> = ({
   currentSort,
   onSort,
 }) => {
-  // This function determines which icon to show based on the current sort state
+  // determines which sort icon to display based on current sort state
   const getSortIcon = () => {
     if (currentSort.column !== column) {
       return <ArrowUpDown className="w-4 h-4 opacity-50" />;

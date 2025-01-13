@@ -1,7 +1,7 @@
-import { FinancialStatement } from "../types";
-
+// base url for the financial modeling prep api
 const API_BASE_URL = "https://financialmodelingprep.com/api/v3";
 
+// interface defining the shape of raw data received from the api
 interface RawFinancialData {
   date: string;
   symbol: string;
@@ -21,34 +21,34 @@ interface RawFinancialData {
 export class APIService {
   private apiKey: string;
 
+  // initialize service with api key
   constructor(apiKey: string) {
     this.apiKey = apiKey;
   }
 
-  // This method fetches and transforms our financial data
   async getFinancialStatements() {
     try {
-      // First, we construct our URL with the API key
+      // construct url for apple's income statement with api key
       const url = new URL(`${API_BASE_URL}/income-statement/AAPL`);
       url.searchParams.append("period", "annual");
       url.searchParams.append("apikey", this.apiKey);
 
-      // Making the API request
+      // log the api call url (hiding the api key for security)
       console.log(
         "Fetching data from:",
         url.toString().replace(this.apiKey, "[HIDDEN]")
       );
       const response = await fetch(url.toString());
 
-      // Check if the request was successful
+      // throw error if response is not ok (status not in 200-299 range)
       if (!response.ok) {
         throw new Error(await this.handleErrorResponse(response));
       }
 
-      // Parse the JSON response
+      // parse json response into array of financial data
       const rawData: RawFinancialData[] = await response.json();
 
-      // Transform the data to match our application's needs
+      // transform raw data into simplified format for frontend use
       return rawData.map((item) => ({
         date: new Date(item.date).toLocaleDateString("en-US", {
           year: "numeric",
@@ -62,16 +62,17 @@ export class APIService {
         operatingIncome: item.operatingIncome,
       }));
     } catch (error) {
-      // Log the error for debugging but throw a user-friendly message
+      // log full error for debugging and throw user-friendly message
       console.error("API Error:", error);
       throw new Error(this.getErrorMessage(error));
     }
   }
 
-  // Helper method to handle different types of error responses
+  // converts api error responses into user-friendly error messages
   private async handleErrorResponse(response: Response): Promise<string> {
     try {
       const errorData = await response.json();
+      // handle different http status codes with specific messages
       switch (response.status) {
         case 401:
           return "Invalid API key. Please check your credentials.";
@@ -83,11 +84,12 @@ export class APIService {
           return errorData.message || `API error: ${response.status}`;
       }
     } catch {
+      // fallback error message if json parsing fails
       return `API error: ${response.status}`;
     }
   }
 
-  // Helper method to convert errors into user-friendly messages
+  // converts any error type into a string message
   private getErrorMessage(error: unknown): string {
     if (error instanceof Error) {
       return error.message;
@@ -96,4 +98,5 @@ export class APIService {
   }
 }
 
+// factory function to create new api service instances
 export const createAPIService = (apiKey: string) => new APIService(apiKey);

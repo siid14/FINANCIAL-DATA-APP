@@ -1,7 +1,8 @@
 import React from "react";
 import { FinancialStatement } from "../../types";
-import SortHeader from "./SortHeader"; // Make sure this path matches your file structure
+import SortHeader from "./SortHeader";
 
+// props interface for the financial table component
 interface FinancialTableProps {
   data: FinancialStatement[];
   isLoading: boolean;
@@ -13,7 +14,7 @@ export const FinancialTable: React.FC<FinancialTableProps> = ({
   isLoading,
   error,
 }) => {
-  // Our sort state remains the same
+  // state to track which column is being sorted and in what direction
   const [sort, setSort] = React.useState<{
     column: keyof FinancialStatement | null;
     direction: "asc" | "desc" | null;
@@ -22,13 +23,13 @@ export const FinancialTable: React.FC<FinancialTableProps> = ({
     direction: "desc",
   });
 
-  // Your existing sortData function remains unchanged
+  // helper function to sort data based on current sort state
   const sortData = (data: FinancialStatement[]) => {
     if (!sort.column || !sort.direction) return data;
-
     return [...data].sort((a, b) => {
-      const aValue = a[sort.column];
-      const bValue = b[sort.column];
+      // sort.column is guaranteed to be non-null here due to the check above
+      const aValue = a[sort.column!];
+      const bValue = b[sort.column!];
 
       if (sort.column === "date") {
         const aDate = new Date(aValue as string).getTime();
@@ -46,6 +47,7 @@ export const FinancialTable: React.FC<FinancialTableProps> = ({
     });
   };
 
+  // handler for when a column header is clicked to sort
   const handleSort = (column: keyof FinancialStatement) => {
     setSort((prevSort) => ({
       column,
@@ -56,7 +58,7 @@ export const FinancialTable: React.FC<FinancialTableProps> = ({
     }));
   };
 
-  // Now we use sortData to get our sorted data
+  // apply sorting to the data
   const sortedData = sortData(data);
 
   if (isLoading) {

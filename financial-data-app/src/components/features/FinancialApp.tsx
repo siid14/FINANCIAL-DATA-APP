@@ -4,20 +4,23 @@ import { FinancialStatement } from "../../types";
 import FinancialTable from "./FinancialTable";
 import FilterControls from "./FilterControl";
 
+// main component that orchestrates the financial data display
 function FinancialApp() {
-  // State management for our data and loading states
+  // state for raw data from api
   const [data, setData] = useState<FinancialStatement[]>([]);
+  // state for data after filters are applied
   const [filteredData, setFilteredData] = useState<FinancialStatement[]>([]);
+  // loading and error states for api calls
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Filter handler
+  // handler that processes all filter changes and updates filtered data
   const handleFilterChange = (filters: {
     dateRange: { start: string; end: string };
     revenue: { min: string; max: string };
     netIncome: { min: string; max: string };
   }) => {
-    // Apply filters to data
+    // apply filters to data
     const filtered = data.filter((item) => {
       const itemDate = new Date(item.date);
       const startDate = filters.dateRange.start
@@ -27,11 +30,11 @@ function FinancialApp() {
         ? new Date(filters.dateRange.end)
         : null;
 
-      // Date range filter
+      // date range filter
       if (startDate && itemDate < startDate) return false;
       if (endDate && itemDate > endDate) return false;
 
-      // Revenue filter
+      // revenue filter
       const minRevenue = filters.revenue.min
         ? parseFloat(filters.revenue.min) * 1000000
         : null;
@@ -41,7 +44,7 @@ function FinancialApp() {
       if (minRevenue && item.revenue < minRevenue) return false;
       if (maxRevenue && item.revenue > maxRevenue) return false;
 
-      // Net Income filter
+      // net income filter
       const minNetIncome = filters.netIncome.min
         ? parseFloat(filters.netIncome.min) * 1000000
         : null;
@@ -57,11 +60,11 @@ function FinancialApp() {
     setFilteredData(filtered);
   };
 
-  // Effect to fetch data when the component mounts
+  // fetch data when component mounts
   useEffect(() => {
     async function fetchFinancialData() {
       try {
-        // Get the API key from environment variables
+        // get api key from environment variables
         const apiKey = import.meta.env.VITE_FMP_API_KEY;
 
         if (!apiKey) {
@@ -70,28 +73,28 @@ function FinancialApp() {
           );
         }
 
-        // Create an instance of our API service
+        // create api service instance
         const apiService = new APIService(apiKey);
 
-        // Fetch and set the data
+        // fetch and set the data
         const financialData = await apiService.getFinancialStatements();
         setData(financialData);
       } catch (err) {
-        // Handle any errors that occur during fetching
+        // handle any errors that occur during fetching
         setError(
           err instanceof Error ? err.message : "Failed to fetch financial data"
         );
       } finally {
-        // Always mark loading as complete
+        // always mark loading as complete
         setIsLoading(false);
       }
     }
 
-    // Call our fetch function
+    // call fetch function
     fetchFinancialData();
-  }, []); // Empty dependency array means this effect runs once when component mounts
+  }, []); // empty dependency array means this effect runs once when component mounts
 
-  // Render our table component once data is loaded
+  // render table component once data is loaded
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
